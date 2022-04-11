@@ -281,5 +281,22 @@ namespace GradeBook.GradeBooks
         {
             Type = GradeBookType.Ranked; 
         }
+
+        public override char GetLetterGrade(double averageGrade)
+        {
+            if (Students.Count < 5)
+                throw new InvalidOperationException("Ranked-grading requires a minimum of 5 students to work");
+            var x = (int)Math.Ceiling(Students.Count * 0.2);
+            var grade = Students.OrderByDescending(e => e.AverageGrade).Select(e => e.AverageGrade).ToList();
+            if (averageGrade >= grade[x - 1])
+                return 'A';
+            if (averageGrade >= grade[(x * 2) - 1])
+                return 'B';
+            if (averageGrade >= grade[(x * 3) - 1])
+                return 'C';
+            if (averageGrade >= grade[(x * 4) - 1])
+                return 'D';
+            return 'F';
+        }
     }
 }
